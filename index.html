@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Find Fly Guy!</title>
+        <meta name="description" content="An interactive getting started guide for Brackets.">
+        <link rel="stylesheet" href="main.css">
+    </head>
+    
+   <!--- 
+
+
+<div>Hello! Welcome to FlyBoy! Try and find the fly!</div>
+    <button id = "startGame">GO!</button> 
+
+This snippet is an attempt to create the intro-->
+    
+    
+    <div id="stage">
+        <div id="background"></div>
+            <div id="lazer2"></div>
+        <div id="lazer"></div>
+        <div id="bug"></div>
+    </div>
+    
+    <p id="output">Enter the X and Y position (0-500), then click examine.</p>
+    <input id="inputX" type = "text" placeholder="X...">
+    <input id="inputY" type = "text" placeholder="Y...">
+    <button>Examine</button>
+    <br>
+    <br>
+    <div id="intro"> <h3>Intro</h3>
+        A boy had a pet fly. He named him Fly Guy. Fly Guy was the smartest pet in the world. <br>
+        He could say the boy’s name “Buzz”. They always love to play a hide and seek. Could you help Buzz to find Fly Guy?”<br>
+        <br>
+    
+    <h3>How To Play:</h3>
+       You will enter x and y coordinate in the input box below; and click “examine” button. <br>
+        If you found the fly on that coordinate (or nearby), the search beam (x- or y-) will turn green, <br>
+        otherwise the beams will stay gray.” 
+    </div>
+   
+    
+    
+    <script>
+    //Game variables
+    var bugX = 250;
+    var bugY = 250;
+    var guessX = 0;
+    var guessY = 0;
+    var guessRemaining = 8;
+    var guessMade = 0;
+    var gameState = "";
+    var gameWon = false;
+    
+    //The game objects
+    var bug = document.querySelector("#bug");
+    var lazer = document.querySelector("#lazer");
+    var lazer2 = document.querySelector("#lazer2");
+    
+    lazer2.style.display = "none";
+    //The input and output fields
+    var inputX = document.querySelector("#inputX");
+    var inputY = document.querySelector("#inputY");
+    var output = document.querySelector("#output");
+    
+    //The buttons
+        
+    //The GO Button that kick-starts the game
+ //   var startButton = document.querySelector("#startGame");
+ //   button.style.cursor = "pointer";
+ //   button.addEventListener("click", clickHandler, false);
+        
+    //Button used to zap the bug with your laser    
+    var button = document.querySelector("button");
+    button.style.cursor = "pointer";
+    button.addEventListener("click", clickHandler, false);
+        
+    function render()
+        
+    {
+        //position of bug
+        bug.style.left = bugX + "px";
+        bug.style.top = bugY + "px";
+        
+        
+        //Position the lazer
+        lazer.style.left = guessX + "px";
+        lazer.style.top = guessY + "px";
+        
+        lazer2.style.left = guessX + "px";
+        lazer2.style.top = guessY + "px";
+    }
+        
+    function clickHandler()
+    {
+        playGame();
+    }
+        
+    function playGame()
+    {
+        guessRemaining = guessRemaining -1;
+        guessMade = guessMade + 1;
+        gameState = " Guesses: " + guessMade + ", Remaining: " + guessRemaining;
+        
+        guessX = parseInt(inputX.value);
+        guessY = parseInt(inputY.value);
+        
+    //find out whether the player's x and y guesses are inside the bug's area
+    
+        if(guessX >= bugX && guessX <= bugX + 40)
+        {
+        //Yes, it's within the X range, so now let's change the Y range
+            if(guessY >= bugY && guessY <= bugY + 40)
+            {   
+            //It's in both the X and Y range, so it's a hit!
+            
+            lazer.style.display = "none";
+            lazer2.style.display = "block";
+            gameWon = true;
+            endGame();
+            }
+        }
+        
+        else
+        
+        {
+            output.innerHTML = "Miss!" + gameState;
+            
+            //Check for the end of the game
+            if (guessRemaining <1)
+            {
+                endGame();
+            }
+        }
+        
+        //Update the bug's position if the game hasn't yet been won
+        
+        if(!gameWon)
+        {
+            //Update the bug's X and Y position
+            bugX = Math.floor(Math.random() * 300);
+            bugY = Math.floor(Math.random() * 300);
+            
+        }
+        //Render the new game state
+        render()
+        console.log("X: " + bugX);
+        comsole.log("Y: " + bugY);
+        
+        
+    }
+    
+    function endGame()
+    {
+        if(gameWon)
+        {
+            output.innerHTML = "Hit! You found the bug!" + "<br>" + "It only took you " + guessMade + " guesses."
+        }
+        else
+        {
+            output.innerHTML = "You lost!" + "<br>" + "The bug flew away!";
+        }
+        
+            //disable the button
+        button.removeEventListener("click", clickHandler, false);
+        button.disabled = true;
+    
+            //disable enter key
+        window.removeEventListener("heydown", keydownHandler, false);
+    
+            //Disable the input field
+        input.disabled = true;
+    }
+        
+        
+   
+    
+    
+    
+    </script>
+</html>
